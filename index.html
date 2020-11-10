@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servidor</title>
+</head>
+<body>
+    <form id="form">
+        <label>Completa tu información</label>
+        <input type="text" name="username" placeholder="Nombre usuario">
+        <input type="file" name="image" id="file">
+        <div class="preview">
+            <p id="username"></p>
+            <img id="imagen">
+        </div>
+        <button>Enviar</button>
+    </form>
+    <script>
+        const $form = document.querySelector('#form')
+        const $image = document.querySelector('#imagen')
+        const $file = document.querySelector('#file')
+
+        function renderImage(formData){
+
+            const file = formData.get('image')
+            const image = URL.createObjectURL(file)
+            $image.setAttribute('src',image)
+
+        }
+
+        const $username = document.querySelector('#username');
+
+        function renderUsername(formData){
+            const username = formData.get('username');
+            //reflejado debido al id del input
+            $username.textContent = username
+        }
+
+        $file.addEventListener('change',(e)=>{
+            const formData = new FormData($form)
+            renderImage(formData)
+
+        })
+
+        $form.addEventListener('submit',(e)=>{
+            e.preventDefault()
+            const formData = new FormData(e.currentTarget)
+            renderUsername(formData)
+
+            //envio al servidor
+            fetch('/',{
+                method: 'POST',
+                body: formData,
+            })
+        })
+    </script>
+    
+</body>
+</html>
